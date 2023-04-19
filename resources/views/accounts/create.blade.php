@@ -19,7 +19,7 @@
                             <select class="form-select" name="client_id">
                                 <option value="0">Clients list</option>
                                 @foreach($clients as $client)
-                                <option value="{{$client->id}}" @if($client->id == $id) selected @endif>
+                                <option value="{{$client->id}}" @if($client->id == old('client_id')) selected @endif>
                                 {{$client->name}} {{$client->surname}}</option>
                                 @endforeach
                             </select>

@@ -26,12 +26,9 @@ class AccountController extends Controller
     public function create()
     {
         $clients = Client::all();
-
-        $id = $request->id ?? 0;
         
         return view('accounts.create', [
-            'clients' => $clients,
-            'id' => $id
+            'clients' => $clients
         ]);
     }
 
@@ -63,9 +60,6 @@ class AccountController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Account $account)
     {
         return view('accounts.edit', [
@@ -73,9 +67,6 @@ class AccountController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Account $account)
     {
         $validator = Validator::make($request->all(), [
@@ -155,6 +146,57 @@ public function withdrawUpdate(Request $request, Account $account)
     ->route('accounts-index')
     ->with('ok', $request->funds.'€ were withdrawn from '.$account->accountClient->name.' '.$account->accountClient->surname);
 }
+
+    //mano transfer
+    public function transfer(Request $request)
+    {
+        
+        $accounts = Account::all();
+        
+        return view('accounts.transfer', [
+            'accounts' => $accounts,
+        ]);
+    }
+
+    public function transferUpdate(Request $request)
+    {
+        if ($request->account_id_1 == 0 || $request->account_id_2 == 0) {
+            $request->flash();
+            return redirect()
+            ->back()
+            ->with('error', 'Select both accounts to proceed!');
+        }
+
+        $accounts = Account::all();
+
+        $account1 = $accounts->find($request->account_id_1);
+        $account2 = $accounts->find($request->account_id_2);
+
+        $validator1 = Validator::make($request->all(), [
+            'funds' => 'required|numeric|decimal:0,2|gte:0',
+        ]);
+    
+        if ($validator1->fails()) {
+            $request->flash();
+            return redirect()
+                ->back()
+                ->withErrors($validator1);
+        }
+
+        if ($request->funds > $account1->funds) {
+            $request->flash();
+            return redirect()
+            ->back()
+            ->with('error', 'Cannot withraw more funds then there is in account');
+        }
+        $account1->funds -= $request->funds;
+        $account2->funds += $request->funds;
+        $account1->save();
+        $account2->save();
+        return redirect()
+        ->route('accounts-index')
+        ->with('ok', $request->funds.'€ were trasfered from '.$account1->accountClient->name.' '.$account1->accountClient->surname. ' to '.$account2->accountClient->name.' '.$account2->accountClient->surname);
+    }
 
     public function destroy(Account $account)
     {

@@ -18,8 +18,10 @@ use App\Http\Controllers\AccountController as AC;
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/register', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/', [CL::class, 'index'])->name('index');
+
 
 Route::name('clients-')->group(function () {
     Route::get('/', [CL::class, 'index'])->name('index');
@@ -43,4 +45,6 @@ Route::prefix('acc')->name('accounts-')->group(function () {
     Route::put('/add/{account}', [AC::class, 'addUpdate'])->name('addUpdate');
     Route::get('/withdraw/{account}', [AC::class, 'withdraw'])->name('withdraw');
     Route::put('/withdraw/{account}', [AC::class, 'withdrawUpdate'])->name('withdrawUpdate');
+    Route::get('/transfer', [AC::class, 'transfer'])->name('transfer');
+    Route::put('/transfer', [AC::class, 'transferUpdate'])->name('transferUpdate');
 });

@@ -6,7 +6,7 @@
         <div class="col-8">
             <div class="card mt-5">
                 <div class="card-header">
-                    <h1>accounts List</h1>
+                    <h1>Accounts List</h1>
                 </div>
                 <div class="card-body">
                     <ul class="list-group">
@@ -14,8 +14,8 @@
                         <li class="list-group-item">
                             <div class="client-line">
                                 <div class="client-info">
-                                    {{$account->accountClient->name ?? 'nerado'}}
-                                    {{$account->accountClient->surname ?? 'kazko'}}
+                                    {{$account->accountClient->name}}
+                                    {{$account->accountClient->surname}}
                                 </div>
                                 <div class="buttons">
                                     <div class="client-funds">
