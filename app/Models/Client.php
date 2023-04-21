@@ -11,4 +11,9 @@ class Client extends Model
 
     protected $fillable = ['name', 'surname', 'pid'];
     public $timestamps = false;
+
+    public function account()
+    {
+        return $this->hasMany(Account::class);
+    }
 }

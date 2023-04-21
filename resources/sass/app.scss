@@ -15,6 +15,7 @@
     align-items: center;
     .client-info {
         display: flex;
+        flex-direction: column;
         justify-content: space-around;
     }
     .buttons {
@@ -27,6 +28,30 @@
             font-weight: bold;
             letter-spacing: 2px;
             padding-right: 20px;
+        }
+    }
+}
+
+.client-accounts{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    .client-account{
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        justify-content: space-between;
+        &-info{
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            align-items: center;
+        }
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            
         }
     }
 }

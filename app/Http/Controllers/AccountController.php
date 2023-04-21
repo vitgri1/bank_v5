@@ -83,7 +83,7 @@ class AccountController extends Controller
         $account->iban = $request->iban;
         $account->save();
         return redirect()
-        ->route('accounts-index')
+        ->route('clients-show', ['client' => $account->accountClient])
         ->with('ok', 'An account was updated');
     }
 
@@ -110,8 +110,8 @@ public function addUpdate(Request $request, Account $account)
     $account->funds += $request->funds;
     $account->save();
     return redirect()
-    ->route('accounts-index')
-    ->with('ok', $request->funds.'€ were added to '.$account->accountClient->name.' '.$account->accountClient->surname);
+    ->route('clients-show', ['client' => $account->accountClient])
+    ->with('ok', $request->funds.'€ were added to '.$account->accountClient->name.' '.$account->accountClient->surname. ' account: '. $account->iban);
 }
 
 //mano withdraw
@@ -143,8 +143,8 @@ public function withdrawUpdate(Request $request, Account $account)
     $account->funds -= $request->funds;
     $account->save();
     return redirect()
-    ->route('accounts-index')
-    ->with('ok', $request->funds.'€ were withdrawn from '.$account->accountClient->name.' '.$account->accountClient->surname);
+    ->route('clients-show', ['client' => $account->accountClient])
+    ->with('ok', $request->funds.'€ were withdrawn from '.$account->accountClient->name.' '.$account->accountClient->surname. ' account: '. $account->iban);
 }
 
     //mano transfer
@@ -167,10 +167,9 @@ public function withdrawUpdate(Request $request, Account $account)
             ->with('error', 'Select both accounts to proceed!');
         }
 
-        $accounts = Account::all();
 
-        $account1 = $accounts->find($request->account_id_1);
-        $account2 = $accounts->find($request->account_id_2);
+        $account1 = Account::where('id', $request->account_id_1)->first();
+        $account2 = Account::where('id', $request->account_id_2)->first();
 
         $validator1 = Validator::make($request->all(), [
             'funds' => 'required|numeric|decimal:0,2|gte:0',
@@ -202,12 +201,12 @@ public function withdrawUpdate(Request $request, Account $account)
     {
         if ($account->funds != 0) {
             return redirect()
-            ->route('accounts-index')
+            ->back()
             ->with('error', 'The account with funds cannot be deleted!');
         }
         $account->delete();
         return redirect()
-        ->route('accounts-index')
+        ->route('clients-show', ['client' => $account->accountClient])
         ->with('info', 'The account was deleted');
     }
 }

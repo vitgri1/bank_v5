@@ -101,4 +101,13 @@ class ClientController extends Controller
         ->route('clients-index')
         ->with('info', 'The client was deleted');
     }
+
+    function totalFunds(Client $client)
+    {   
+        $total = 0;
+        foreach ($client->accounts as $account) {
+            $total += (float) $account->funds;
+        }
+        return $total;
+    }
 }

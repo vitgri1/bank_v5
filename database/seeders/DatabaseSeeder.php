@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             DB::table('accounts')->insert([
                 'client_id' => rand(1, 15),
                 'iban' => 'LT'.rand(100000000000000000, 999999999999999999),
-                'funds' => (float) rand(0, 1000000).'.'.rand(0, 99),
+                'funds' => (float) rand(0, 100000).'.'.rand(0, 99),
             ]);
         }
     }

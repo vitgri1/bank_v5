@@ -14,13 +14,19 @@
                         <li class="list-group-item">
                             <div class="client-line">
                                 <div class="client-info">
-                                    {{$client->name}}
+                                    <div>{{$client->name}}
                                     {{$client->surname}}
+                                    </div>
+                                    @if ($client->account->count() > 0)
+                                    <div>
+                                        Number of accounts: {{$client->account->count()}}
+                                    </div>
+                                    <div>
+                                        Total funds in all accounts: {{$client->account->sum('funds')}}€
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="buttons">
-                                    {{-- <div class="client-funds">
-                                        {{$client->funds}}€
-                                    </div> --}}
                                     <a href="{{route('clients-show', $client)}}" class="btn btn-info">Show</a>
                                     <a href="{{route('clients-edit', $client)}}" class="btn btn-primary">Edit</a>
                                     <form action="{{route('clients-delete', $client)}}" method="post">

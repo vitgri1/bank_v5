@@ -17,6 +17,9 @@
                             {{$account->accountClient->surname}}
                         </div>
                         <div class="mb-3">
+                            {{$account->iban}}
+                        </div>
+                        <div class="mb-3">
                             {{$account->funds}}€
                         </div>
                         <div class="mb-3">
