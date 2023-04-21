@@ -91,23 +91,16 @@ class ClientController extends Controller
 
     public function destroy(Client $client)
     {
-        if ($client->funds != 0) {
-            return redirect()
-            ->route('clients-index')
-            ->with('error', 'The client with funds cannot be deleted!');
+        foreach ($client->account as $account){      
+            if ($account->funds != 0) {
+                return redirect()
+                ->route('clients-index')
+                ->with('error', 'The client with funds in any account cannot be deleted!');
+            }
         }
         $client->delete();
         return redirect()
         ->route('clients-index')
         ->with('info', 'The client was deleted');
-    }
-
-    function totalFunds(Client $client)
-    {   
-        $total = 0;
-        foreach ($client->accounts as $account) {
-            $total += (float) $account->funds;
-        }
-        return $total;
     }
 }

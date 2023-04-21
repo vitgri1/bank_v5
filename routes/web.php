@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ClientController as CL;
 use App\Http\Controllers\AccountController as AC;
+use App\Http\Controllers\HomeController as HM;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +18,12 @@ use App\Http\Controllers\AccountController as AC;
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/register', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/', [CL::class, 'index'])->name('index');
-
+Route::get('/', [HM::class, 'index'])->name('home');
+Route::get('/home', [HM::class, 'index'])->name('home');
+Route::get('/register', [HM::class, 'index'])->name('home');
 
 Route::name('clients-')->group(function () {
-    Route::get('/', [CL::class, 'index'])->name('index');
+    Route::get('/list', [CL::class, 'index'])->name('index');
     Route::get('/create', [CL::class, 'create'])->name('create');
     Route::post('/create', [CL::class, 'store'])->name('store');
     Route::get('/{client}', [CL::class, 'show'])->name('show');

@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Validator;
 
 class AccountController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index()
     {
@@ -35,7 +35,11 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'iban' => 'required|size:20|regex:/^LT\d{18}$/'
+            'iban' => 'required|size:20|regex:/^LT\d{18}$/',
+            'client_id' => 'not_regex:/^[0]{1}$/'
+        ],
+        [
+            'client_id.not_regex' => 'Select a client from the list'
         ]);
 
         if ($validator->fails()) {
