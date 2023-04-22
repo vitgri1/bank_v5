@@ -14,12 +14,49 @@ class ClientController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $clients = Client::all()->sortBy('surname');
+        // $clients = Client::all()->sortBy('surname');
+    
+        $sort = $request->sort ?? '';
+        $filter = $request->filter ?? '';
+        $per = (int) ($request->per ?? 10);
+        $page = $request->page ?? 1;
+
+        // $clients = match($filter) {
+        //     'tt' => Client::where('tt', 1),
+        //     'fb' => Client::where('tt', 0),
+        //     default => Client::where('tt', 0)->orWhere('tt', 1)
+        // };
+        $clients = Client::where('id', '>', 0);
+
+        $clients = match($sort) {
+            'name_asc' => $clients->orderBy('name'),
+            'name_desc' => $clients->orderBy('name', 'desc'),
+            'surname_asc' => $clients->orderBy('surname'),
+            'surname_desc' => $clients->orderBy('surname', 'desc'),
+            default => $clients
+        };
+
+        $request->session()->put('last-client-view', [
+            'sort' => $sort,
+            'filter' => $filter,
+            'page' => $page,
+            'per' => $per
+        ]);
+
+        $clients = $clients->paginate($per)->withQueryString();
+
 
         return view('bank.index', [
-            'clients' => $clients
+            'clients' => $clients,
+            'sortSelect' => Client::SORT,
+            'sort' => $sort,
+            'filterSelect' => Client::FILTER,
+            'filter' => $filter,
+            'perSelect' => Client::PER,
+            'per' => $per,
+            'page' => $page
         ]);
     }
 

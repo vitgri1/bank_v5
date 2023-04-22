@@ -111,6 +111,14 @@ public function addUpdate(Request $request, Account $account)
             ->withErrors($validator);
     }
     
+    if (!$request->confirm && $request->funds > 1000) {
+        return redirect()
+        ->back()
+        ->with('big-sum-modal', [
+            [$account], $request->funds, 'accounts-addUpdate', 'Add'
+        ]);
+    }
+
     $account->funds += $request->funds;
     $account->save();
     return redirect()
@@ -144,6 +152,15 @@ public function withdrawUpdate(Request $request, Account $account)
         ->back()
         ->with('error', 'Cannot withraw more funds then there is in account');
     }
+
+    if (!$request->confirm && $request->funds > 1000) {
+        return redirect()
+        ->back()
+        ->with('big-sum-modal', [
+            [$account], $request->funds, 'accounts-withdrawUpdate', 'Withdrawal'
+        ]);
+    }
+
     $account->funds -= $request->funds;
     $account->save();
     return redirect()
@@ -192,6 +209,15 @@ public function withdrawUpdate(Request $request, Account $account)
             ->back()
             ->with('error', 'Cannot withraw more funds then there is in account');
         }
+
+        if (!$request->confirm && $request->funds > 1000) {
+            return redirect()
+            ->back()
+            ->with('big-sum-modal', [
+                [$account1, $account2], $request->funds, 'accounts-transferUpdate', 'Transfer'
+            ]);
+        }
+
         $account1->funds -= $request->funds;
         $account2->funds += $request->funds;
         $account1->save();

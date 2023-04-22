@@ -98,6 +98,7 @@
         </nav>
         @include('layouts.messages')
         @include('layouts.errors')
+        @include('layouts.bigSum')
         <main class="py-4">
             @yield('content')
         </main>

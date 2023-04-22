@@ -45,6 +45,9 @@
                     </ul>
                 </div>
             </div>
+            <div class="m-2">
+                {{ $clients->links() }}
+            </div>
         </div>
     </div>
 </div>
