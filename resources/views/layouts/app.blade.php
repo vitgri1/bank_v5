@@ -62,6 +62,11 @@
                                 Transfer
                             </a>
                         </li>
+                        <li class="nav-item nav-link">
+                            <a class="dropdown-item" href="{{ route('accounts-fees') }}">
+                                Fees
+                            </a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

@@ -7,6 +7,51 @@
             <div class="card mt-5">
                 <div class="card-header">
                     <h1>Accounts List</h1>
+                    <form action="{{route('accounts-index')}}" method="get">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Sort</label>
+                                        <select class="form-select" name="sort">
+                                            @foreach($sortSelect as $value => $text)
+                                            <option value="{{$value}}" @if($value===$sort) selected @endif>{{$text}}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="form-text">Sort preferences</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Filter</label>
+                                        <select class="form-select" name="filter">
+                                            @foreach($filterSelect as $value => $text)
+                                            <option value="{{$value}}" @if($value===$filter) selected @endif>{{$text}}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="form-text">Filter preferences</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="mb-3">
+                                        <label class="form-label">Results per page</label>
+                                        <select class="form-select" name="per">
+                                            @foreach($perSelect as $value => $text)
+                                            <option value="{{$value}}" @if($value===$per) selected @endif>{{$text}}</option>
+                                            @endforeach
+                                        </select>
+                                        <div class="form-text">View preferences</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="sort-filter-buttons">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <a href="{{route('accounts-index')}}" class="btn btn-danger">Clear</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="card-body">
                     <ul class="list-group">
@@ -39,6 +84,9 @@
                         @endforelse
                     </ul>
                 </div>
+            </div>
+            <div class="m-2">
+                {{ $accounts->links() }}
             </div>
         </div>
     </div>

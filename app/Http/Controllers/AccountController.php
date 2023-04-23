@@ -14,12 +14,46 @@ class AccountController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $accounts = Account::all();
+        $sort = $request->sort ?? '';
+        $filter = $request->filter ?? '';
+        $per = (int) ($request->per ?? 10);
+        $page = $request->page ?? 1;
+
+        $accounts = match($filter) {
+            'neg' => Account::where('funds', '<', 0),
+            'pos' => Account::where('funds', '>', 0),
+            'zero' => Account::where('funds', '=', 0),
+            default => Account::where('funds', '>', 0)->orWhere('funds', '<=', 0),
+        };
+
+        $accounts = match($sort) {
+            'funds_asc' => $accounts->orderBy('funds'),
+            'funds_desc' => $accounts->orderBy('funds', 'desc'),
+            'cid_asc' => $accounts->orderBy('client_id'),
+            'cid_desc' => $accounts->orderBy('client_id', 'desc'),
+            default => $accounts
+        };
+
+        $request->session()->put('last-client-view', [
+            'sort' => $sort,
+            'filter' => $filter,
+            'page' => $page,
+            'per' => $per
+        ]);
+
+        $accounts = $accounts->paginate($per)->withQueryString();
 
         return view('accounts.index', [
-            'accounts' => $accounts
+            'accounts' => $accounts,
+            'sortSelect' => Account::SORT,
+            'sort' => $sort,
+            'filterSelect' => Account::FILTER,
+            'filter' => $filter,
+            'perSelect' => Account::PER,
+            'per' => $per,
+            'page' => $page
         ]);
     }
 
@@ -225,6 +259,23 @@ public function withdrawUpdate(Request $request, Account $account)
         return redirect()
         ->route('accounts-index')
         ->with('ok', $request->funds.'€ were trasfered from '.$account1->accountClient->name.' '.$account1->accountClient->surname. ' to '.$account2->accountClient->name.' '.$account2->accountClient->surname);
+    }
+
+    //mano fees
+    public function fees()
+    {
+        $clients = Client::whereExists(function ($query) {
+            $query->from('accounts')
+                  ->whereColumn('accounts.client_id', 'clients.id');
+        })->get();
+        foreach ($clients as $client){
+            $rand_acc_id = $client->account[rand(0,$client->account->count()-1)]->id;
+            Account::where('id', $rand_acc_id)
+            ->decrement('funds', 5);
+        }
+        return redirect()
+        ->back()
+        ->with('ok', 'Fees where applied to every client with bank account');
     }
 
     public function destroy(Account $account)
