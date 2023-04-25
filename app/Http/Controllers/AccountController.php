@@ -205,11 +205,26 @@ public function withdrawUpdate(Request $request, Account $account)
     //mano transfer
     public function transfer(Request $request)
     {
-        
-        $accounts = Account::all();
-        
+        $clients = Client::all();
+
         return view('accounts.transfer', [
-            'accounts' => $accounts,
+            'clients' => $clients,
+        ]);
+    }
+
+    public function clientsAccountsList(Request $request)
+    {
+        $accounts = Account::where('client_id', $request->cl)->get();
+
+        $html = view('accounts.lister')
+            ->with([
+                'accounts' => $accounts,
+                'id' => $request->acc,
+            ])
+            ->render();
+
+        return response()->json([
+            'html' => $html
         ]);
     }
 

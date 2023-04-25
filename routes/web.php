@@ -47,4 +47,5 @@ Route::prefix('acc')->name('accounts-')->group(function () {
     Route::get('/transfer', [AC::class, 'transfer'])->name('transfer');
     Route::put('/transfer', [AC::class, 'transferUpdate'])->name('transferUpdate');
     Route::get('/fees', [AC::class, 'fees'])->name('fees');
+    Route::get('/accountsList', [AC::class, 'clientsAccountsList'])->name('accountsList');
 });
